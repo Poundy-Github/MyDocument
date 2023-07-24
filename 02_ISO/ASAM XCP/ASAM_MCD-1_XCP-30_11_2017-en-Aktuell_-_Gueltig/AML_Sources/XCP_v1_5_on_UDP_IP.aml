@@ -1,0 +1,73 @@
+/* ASAM MCD-1 XCP V1.5.0                                                 */
+/*                                                                       */
+/* © by ASAM e.V., 2017                                                  */
+/*                                                                       */
+/* AML of transport layer UDP/IP                                         */
+/*                                                                       */
+/* Any use is limited to the scope described in the ASAM license terms.  */
+/* This file is distributable in accordance with the ASAM license terms. */
+/* See www.asam.net/license.html for further details.                    */
+
+
+/***********************************************************/
+/*                                                         */
+/*   ASAP2 meta language for XCP on UDP_IP V1.5            */
+/*                                                         */
+/*                                                         */
+/*   Datatypes:                                            */
+/*                                                         */
+/*   A2ML       description                                */
+/*   ---------------------------------------------------   */
+/*   uchar      unsigned 8 Bit                             */
+/*   char       signed 8 Bit                               */
+/*   uint       unsigned integer 16 Bit                    */
+/*   int        signed integer 16 Bit                      */
+/*   ulong      unsigned integer 32 Bit                    */
+/*   long       signed integer 32 Bit                      */
+/*   int64      signed integer 64 Bit                      */
+/*   uint64     unsigned integer 64 Bit                    */
+/*   float      float point 32 Bit IEEE 754                */
+/*   double     float point 64 Bit IEEE 754                */
+/*                                                         */
+/***********************************************************/
+
+/************************ start of UDP_IP ******************/
+
+struct UDP_IP_Parameters {
+
+  uint;                          /* XCP on UDP_IP version */
+                                 /* "1.5" = 0x0105 */
+  uint;                          /* PORT */
+
+  taggedunion {
+    "HOST_NAME" char[256];
+    "ADDRESS" char[15];
+    "IPV6" char[39];
+  };
+  taggedstruct{
+    "MAX_BUS_LOAD"  ulong;       /* maximum available bus */
+                                 /* load in percent */
+    "MAX_BIT_RATE"  ulong;       /* Network speed which is */
+                                 /* the base for MAX_BUS_LOAD in Mbit */
+  };
+
+  taggedstruct{
+    "PACKET_ALIGNMENT" enum {
+      "PACKET_ALIGNMENT_8"  = 0, /* This is the default if the keyword is missing */
+      "PACKET_ALIGNMENT_16" = 1,
+      "PACKET_ALIGNMENT_32" = 2
+    };
+  };
+
+  taggedstruct{
+    ("OPTIONAL_TL_SUBCMD" enum { /* XCP-Code of optional transport layer */
+                                 /* specific subcommand supported by the slave */
+      "GET_SLAVE_ID"             = 0xFF,
+      "GET_SLAVE_ID_EXTENDED"    = 0xFD,
+      "SET_SLAVE_IP_ADDRESS"     = 0xFC,
+      "GET_DAQ_CLOCK_MULTICAST"  = 0xFA
+    })*;
+  };
+};
+
+/*************************** end of UDP_IP *****************/
